@@ -43,7 +43,7 @@ def Dodge_Jug(Name):
 print(Dodge_Jug('###'))#닉네임 입력
 
 
-text = pytesseract.image_to_string(Chat_img,lang='kor+eng')#이미지 파일 
+text = pytesseract.image_to_string(Chat_img,lang='kor+eng')#이미지 파일 글로 
 print(text)
 
 
