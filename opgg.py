@@ -40,10 +40,10 @@ def Dodge_Jug(Name):
     winrate=driver.find_element_by_class_name("winratio").text
     return Name,tier,win,lose,winrate
 
-print(Dodge_Jug('그노을'))
+print(Dodge_Jug('###'))#닉네임 입력
 
 
-text = pytesseract.image_to_string(Chat_img,lang='kor+eng')
+text = pytesseract.image_to_string(Chat_img,lang='kor+eng')#이미지 파일 
 print(text)
 
 
