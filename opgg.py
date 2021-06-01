@@ -16,11 +16,11 @@ img=Image.open('lol.png')
 area=(200,660,567,900) #채팅창 자르기
 Chat_img=img.crop(area)
 #Chat_img.show()
+webdriver_options=webdriver.ChromeOptions()
+webdriver_options.add_argument('headless')
+driver = webdriver.Chrome(options=webdriver_options)
 
 def Dodge_Jug(Name):
-    webdriver_options=webdriver.ChromeOptions()
-    webdriver_options.add_argument('headless')
-    driver = webdriver.Chrome(options=webdriver_options)
     url = 'https://www.op.gg/summoner/userName=' + Name #닉네임 검색
     action = ActionChains(driver)
     driver.get(url)
@@ -41,7 +41,7 @@ def Dodge_Jug(Name):
     winrate=driver.find_element_by_class_name("winratio").text
     
     result='%s(%s): %s (%s,%s)' %(Name, tier, winrate, win, lose)
-   
+    driver.Close()
     return result
 
 
