@@ -8,13 +8,14 @@ import pytesseract
 import pyperclip
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 
+
 ###-------------------'''prtscr 버튼 누르기'''-------------###
 BanPick_img=ImageGrab.grabclipboard() 
 BanPick_img.save('lol.png','PNG') #롤 픽창화면 저장
 img=Image.open('lol.png')
 area=(200,660,567,900) #채팅창 자르기
 Chat_img=img.crop(area)
-Chat_img.show()
+#Chat_img.show()
 
 def Dodge_Jug(Name):
     webdriver_options=webdriver.ChromeOptions()
@@ -38,13 +39,26 @@ def Dodge_Jug(Name):
     win=driver.find_element_by_class_name("wins").text
     lose=driver.find_element_by_class_name("losses").text
     winrate=driver.find_element_by_class_name("winratio").text
-    return Name,tier,win,lose,winrate
+    
+    result='%s(%s): %s (%s,%s)' %(Name, tier, winrate, win, lose)
+   
+    return result
 
-print(Dodge_Jug('그노을'))##닉네임 입력
 
+msg = pytesseract.image_to_string(Chat_img,lang='kor+eng').split('\n')##이미지 파일 글로 변환
 
-text = pytesseract.image_to_string(Chat_img,lang='kor+eng')##이미지 파일 글로 변환
-print(text)
+Name_list=[]
+
+for w in msg:
+    if '로비에' in w:
+        Nick=w[0:w.index('로비에')-3]
+        if (Nick) not in Name_list:
+            Name_list.append(Nick)
+##print(Name_list)
+##li=['군밤아저시'] ##길이가 1인 리스트일 때는 잘돌아감
+for i in Name_list:
+    print(i)
+    print(Dodge_Jug(i))
 
 ###닉네임 추출해서 리스트 만든 뒤 함수에 집어넣고 return 값을 각각 받아 
 ###클립보드에 복사하기
