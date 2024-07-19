@@ -2,34 +2,32 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 import time
-from PIL import ImageGrab # 이미지 파일 관련 라이브러리
-from PIL import Image # '''
-import pytesseract # 이미지>>글로 변환 라이브러리
-import pyperclip # 클립보드 관련 라이브러리
+from PIL import ImageGrab
+from PIL import Image
+import pytesseract
+import pyperclip 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 
 # 롤 픽창 들어가면 먼저 prtscr버튼 눌러야함
 
 BanPick_img=ImageGrab.grabclipboard() 
-BanPick_img.save('lol.png','PNG') #롤 픽창화면 lol.png로 저장
+BanPick_img.save('lol.png','PNG') #롤 픽창화면 저장
 img=Image.open('lol.png')
-area=(200,660,567,900) #채팅창 픽셀에 맞춰 자르기
+area=(200,660,567,900) # 채팅창 픽셀에 맞춰 자르기
 Chat_img=img.crop(area)
 
-#---------wedriver설정-------------------------------#
 webdriver_options=webdriver.ChromeOptions()
 webdriver_options.add_argument('headless')
 driver = webdriver.Chrome(options=webdriver_options)
-#----------------------------------------------------#
 
-def Dodge_Jug(Name):  #Name=닉네임
+def Dodge_Jug(Name):
     
-    url = 'https://www.op.gg/summoner/userName=' + Name #닉네임 검색
+    url = 'https://www.op.gg/summoner/userName=' + Name # 닉네임 검색
     action = ActionChains(driver)
     driver.get(url)
 
     try:
-        driver.find_element_by_css_selector('.Button.SemiRound.Blue').click() #갱신 버튼 클릭
+        driver.find_element_by_css_selector('.Button.SemiRound.Blue').click() # 갱신 버튼 클릭
         time.sleep(2)
         action.send_keys(Keys.ENTER) # 최근 갱신 3분미만 일 때 뜨는 alert '엔터키' 누르고 확인
         driver.switch_to_alert().accept() #''''''
@@ -51,31 +49,22 @@ def Dodge_Jug(Name):  #Name=닉네임
     #-------------------------------------------------------#
     return result
 
-
-msg = pytesseract.image_to_string(Chat_img,lang='kor+eng').split('\n') # 이미지 파일 글로 변환
+# 이미지 파일 글로 변환
+msg = pytesseract.image_to_string(Chat_img,lang='kor+eng').split('\n')
 
 Name_list=[]
 
-#------------닉네임만 추출--------------#
+# 닉네임만 추출
 for w in msg:
     if '로비에' in w:
         Nick=w[0:w.index('로비에')-3]
         if (Nick) not in Name_list:
             Name_list.append(Nick) 
-#--------------------------------------#
 
 team_luck=''
-
-#li=['그노을','군밤아저시','초월의식','망치로뚜디맞는다','못해서미아내요']-----test용
-#테스트 할 때 13,14줄 각주 처리하고 해야 함
-
-
-for i in Name_list: #name_list대신 li로 테스트
-    team_luck+='%s\n'%(Dodge_Jug(i)) # 닉네임 하나씩 함수에 집어넣기
+for i in Name_list:
+    team_luck+='%s\n'%(Dodge_Jug(i))
 
 pyperclip.copy(chat) # 결과값 클립보드에 복사
 
 #>>>>픽창에 그대로 복붙하면 됨
-
-
-
